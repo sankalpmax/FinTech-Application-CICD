@@ -14,7 +14,7 @@ pipeline {
 		}
 	stage('Dockr Run'){
 		steps{
-			sh 'docker run -d -p 3000:3000 --name MyFintech-co my-fintech-application:02'
+			sh 'docker run -d -p 5000:5000 --name MyFintech-co my-fintech-application:02'
 				}
 			}
 		}
