@@ -1,0 +1,20 @@
+apiVersion: apps/v1           
+kind: Deployment
+metadata:
+  name: phonepay-app-deployment
+spec:
+  replicas: 2            
+  selector:
+    matchLabels:
+      app: phonepay-app-deployment
+  template:
+    metadata:
+      labels:
+        app: phonepay-app-deployment 
+    spec:
+      containers:
+        - name: phonepay-container
+          image: sankalparava/phonepay:03
+          ports:
+            - containerPort: 80
+
