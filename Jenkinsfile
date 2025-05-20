@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
+    }
+
     stages {
         stage('Clone') {
             steps {
@@ -8,40 +12,37 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build Image') {
             steps {
-                sh 'docker build -t my-fintech-application:02 .'
+                sh 'docker build -t sankalparava/phonepay:03 .'
             }
         }
 
-        stage('Docker Run') {
+        stage('Docker Run Container') {
             steps {
-                sh 'docker run -d -p 5000:5000 --name MyFintech-co my-fintech-application:02'
+                sh '''
+                docker run -d -p 5000:5000 --name digital-bank sankalparava/phonepay:03
+                '''
             }
         }
 
-        stage('Docker Push Image') {
+        stage('Docker Push') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        sh 'docker tag my-fintech-application:02 sankalparava/my-fintech-application:02'
-                        sh 'docker push sankalparava/my-fintech-application:02'
+                        sh 'docker push sankalparava/phonepay:03'
                     }
                 }
             }
         }
 
-        stage('Trivy Scan') {
+        stage('Kubernetes Deploy') {
             steps {
-                script {
-                    sh '''
-                        docker run --rm \
-                          -v /var/run/docker.sock:/var/run/docker.sock \
-                          aquasec/trivy image --severity HIGH,CRITICAL --exit-code 0 my-fintech-application:02
-                    '''
-                }
+                sh '''
+                kubectl apply -f phonepay-app-deployment.yaml
+     		kubectl apply -f phonepay-app-service.yaml           
+                '''
             }
         }
     }
 }
-
