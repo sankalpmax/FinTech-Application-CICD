@@ -7,8 +7,8 @@ on:
 
 # Environment variables available to all jobs and steps
 env:
-  ECR_REPOSITORY: fintech-application-cicd # <-- Make sure this is your ECR repo name
-  AWS_REGION: us-east-1                  # <-- Make sure this is your AWS region
+  ECR_REPOSITORY: fintech-application-cicd # <-- 👈 CHANGE THIS to your ECR repository name
+  AWS_REGION: us-east-1                  # <-- 👈 CHANGE THIS to your AWS region
 
 jobs:
   build-and-push:
@@ -20,7 +20,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets. }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
